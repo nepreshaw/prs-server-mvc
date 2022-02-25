@@ -18,6 +18,22 @@ namespace prs_server_mvc.Controllers
             _context = context;
         }
 
+        public IActionResult Login() {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login([Bind("Username, Password")]LoginViewModel model) {
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == model.Username && x.Password == model.Password);
+            if(user is null) {
+                ViewBag.ErrorMessage = "Username/Password is invalid";
+                return View();
+            }
+
+            return RedirectToAction("Index", "Requests");
+
+        }
+
         // GET: Users
         public async Task<IActionResult> Index()
         {
